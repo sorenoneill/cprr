@@ -148,15 +148,31 @@ clean <- function(cpr) {
     stop('CPR numbers must be provided as character strings.')
   }
 
-  cpr <- gsub('[^[:alnum:]]+', '', cpr)
+  # :digit: instead of :alnum: removes any hyphens, trailing white spaces, etc.
+  cpr <- gsub('[^[:digit:]]+', '', cpr)
 
   if(any(nchar(cpr[!is.na(cpr)]) != 10)) {
     warning('One or more CPR numbers of incorrect length replaced with NA.')
     cpr[nchar(cpr) != 10] <- NA
   }
 
+  # Check valid date in first 4 digits
+  if(any(is.na(as.Date(substr(cpr,1,6), format="%d%m%y")))) {
+    warning('One or more CPR numbers with invalid DOB replaced with NA.')
+    cpr[is.na(as.Date(substr(cpr,1,6), format="%d%m%y"))] <- NA
+  }
+
   cpr
 }
+
+format <- function(cpr, add_hyphen=FALSE) {
+  cpr <- clean(cpr)
+  if (add_hyphen) {
+    cpr <- paste0(substr(cpr,1,6),"-",substr(cpr,7,10))
+  }
+  cpr
+}
+
 
 #' Modulo 11 check
 #'

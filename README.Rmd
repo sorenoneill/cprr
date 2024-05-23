@@ -43,6 +43,9 @@ scramble(cpr)
 # Perform modulo 11 check of cpr numbers.
 mod11(cpr)
 
+# Format cpr numbers correctly
+format(cpr, add_hyphen=TRUE)
+
 # Make data frame from build in data set of official test cpr numbers.
 cpr <- test_cpr$cpr
 data.frame(
